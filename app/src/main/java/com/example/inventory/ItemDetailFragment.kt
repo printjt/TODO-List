@@ -77,6 +77,7 @@ class ItemDetailFragment : Fragment() {
             itemName.text = item.itemName
             itemDetail.text = item.itemDetail
             imageView.setImageURI(item.itemImage.toUri())
+            itemDate.text = item.date
 
 
 

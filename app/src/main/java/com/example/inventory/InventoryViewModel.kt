@@ -16,6 +16,7 @@
 
 package com.example.inventory
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -47,9 +48,10 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         itemName: String,
         itemDetail: String,
         itemImage: String,
-        isDone: Boolean
+        isDone: Boolean,
+        date: String
     ) {
-        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemDetail,itemImage, isDone)
+        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemDetail,itemImage, isDone,date)
         updateItem(updatedItem)
     }
 
@@ -71,8 +73,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     /**
      * Inserts the new Item into database.
      */
-    fun addNewItem(itemName: String, itemDetail: String, itemImage: String) {
-        val newItem = getNewItemEntry(itemName, itemDetail,itemImage)
+    fun addNewItem(itemName: String, itemDetail: String, itemImage: String,date: String) {
+        val newItem = getNewItemEntry(itemName, itemDetail,itemImage,date)
         insertItem(newItem)
     }
 
@@ -104,8 +106,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     /**
      * Returns true if the EditTexts are not empty
      */
-    fun isEntryValid(itemName: String, itemDetail: String): Boolean {
-        if (itemName.isBlank() || itemDetail.isBlank()) {
+    fun isEntryValid(itemName: String, itemDetail: String, itemImage: String,date: String): Boolean {
+        if (itemName.isBlank() || itemDetail.isBlank() || itemImage.contains("Vector") || date.isBlank()) {
             return false
         }
         return true
@@ -115,12 +117,13 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
      * Returns an instance of the [Item] entity class with the item info entered by the user.
      * This will be used to add a new entry to the Inventory database.
      */
-    private fun getNewItemEntry(itemName: String, itemDetail: String,itemImage: String): Item {
+    private fun getNewItemEntry(itemName: String, itemDetail: String,itemImage: String,date: String): Item {
         return Item(
             itemName = itemName,
             itemDetail = itemDetail,
             itemImage = itemImage,
-            isDone = false
+            isDone = false,
+            date = date
         )
     }
 
@@ -133,7 +136,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
         itemName: String,
         itemDetail: String,
         itemImage: String,
-        isDone: Boolean
+        isDone: Boolean,
+        date: String
     ): Item {
 
         return Item(
@@ -141,7 +145,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
             itemName = itemName,
             itemDetail = itemDetail,
             itemImage = itemImage,
-            isDone = isDone
+            isDone = isDone,
+            date = date
         )
 
 

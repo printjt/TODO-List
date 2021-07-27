@@ -20,9 +20,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,7 +65,8 @@ class ItemListFragment : Fragment() {
                         no.itemName,
                         no.itemDetail,
                         no.itemImage,
-                        true
+                        true,
+                        no.date
                     )
                 }
             }, {
@@ -99,7 +102,8 @@ class ItemListFragment : Fragment() {
 
 
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+       binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+
         binding.recyclerView.adapter = adapter
 
 
@@ -108,7 +112,17 @@ class ItemListFragment : Fragment() {
         viewModel.allItems.observe(this.viewLifecycleOwner) { items ->
 
             items.let {
+                binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
 
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        adapter.submitList(items.filter { it.itemName.contains(newText!!,true) && !it.isDone })
+                        return true
+                    }
+
+                })
                 adapter.submitList(items.filter { !it.isDone })
 
             }

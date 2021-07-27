@@ -64,47 +64,61 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-
+            android:layout_width="125dp"
+            android:layout_height="133dp"
             android:layout_marginTop="28dp"
+            android:src="@drawable/ic_baseline_image_search_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_detail_label"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@drawable/ic_baseline_image_search_24" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="Gallery"
-            app:layout_constraintEnd_toStartOf="@id/camera"
+            android:layout_marginTop="4dp"
+            android:text="Upload"
+            app:cornerRadius="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-        <Button
-            android:id="@+id/camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="Camera"
-            app:layout_constraintStart_toEndOf="@id/gallery"
-
-            app:layout_constraintBottom_toBottomOf="@id/gallery"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/save_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/save_action"
+            app:cornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gallery" />
+
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="371dp"
+            android:layout_height="260dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/save_action" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/viewCalender"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="44dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            app:icon="@drawable/ic_baseline_calendar_today_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_detail_label" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -13,62 +13,102 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:descendantFocusability="blocksDescendants">
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp"
+    app:cardMaxElevation="1dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true"
 
-    <TextView
-        android:id="@+id/item_name"
-        style="@style/Widget.Inventory.ListItemTextView"
-        android:layout_width="180dp"
-        android:layout_marginStart="@dimen/margin_between_elements"
-        android:fontFamily="sans-serif"
-        app:layout_constraintEnd_toStartOf="@+id/item_price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Cogs and Widgets" />
 
-    <TextView
-        android:id="@+id/item_price"
-        style="@style/Widget.Inventory.ListItemTextView"
-        android:layout_width="100dp"
-        android:layout_below="@+id/item_name"
-        android:layout_marginStart="@dimen/margin_between_elements"
-        android:fontFamily="sans-serif-medium"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/item_quantity"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/item_name"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="" />
-    <RadioButton
-        android:layout_width="wrap_content"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/item_button"
-        app:layout_constraintStart_toEndOf="@id/item_price"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        />
-    <TextView
-        android:id="@+id/item_quantity"
-        style="@style/Widget.Inventory.ListItemTextView"
-        android:layout_width="80dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/margin_between_elements"
-        android:fontFamily="sans-serif-medium"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/item_button"
-        tools:text="" />
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical"
+        android:id="@+id/linear"
+        >
 
 
+        <TextView
+            android:id="@+id/item_name"
+            style="@style/Widget.Inventory.ListItemTextView"
+            android:layout_width="300dp"
+            android:layout_marginStart="10dp"
+            android:fontFamily="sans-serif"
+            android:paddingStart="20dp"
+            app:layout_constraintEnd_toStartOf="@id/item_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Cogs and Widgets" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <CheckBox
+            android:id="@+id/item_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_gravity="end"
+            android:clickable="false"
+
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/expand"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/item_name"
+            >
+
+            <TextView
+                android:id="@+id/detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello world"
+                android:textStyle="bold"
+                android:paddingStart="40dp"
+                android:paddingBottom="30dp"
+                />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01/09/2022"
+                android:layout_alignBottom="@id/detail"
+                android:paddingStart="40dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="10dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/but"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconTint="@color/black"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:rippleColor="@color/white"
+
+
+
+                />
+
+
+        </RelativeLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

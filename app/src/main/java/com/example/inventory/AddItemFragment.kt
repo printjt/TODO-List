@@ -16,6 +16,7 @@
 package com.example.inventory
 
 import android.app.Activity
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.graphics.Bitmap
@@ -28,7 +29,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -38,6 +41,8 @@ import com.example.inventory.databinding.FragmentAddItemBinding
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.random.Random
+import com.github.dhaval2404.imagepicker.ImagePicker
+
 
 /**
  * Fragment to add or update an item in the Inventory database.
@@ -47,6 +52,8 @@ class AddItemFragment : Fragment() {
     private val pickImage = 100
     private var imageUri: Uri? = null
     private lateinit var dir: String
+    private var isCal = false
+    private var date = ""
 
     // Use the 'by activityViewModels()' Kotlin property delegate from the fragment-ktx artifact
     // to share the ViewModel across fragments.
@@ -81,7 +88,10 @@ class AddItemFragment : Fragment() {
     private fun isEntryValid(): Boolean {
         return viewModel.isEntryValid(
             binding.itemName.text.toString(),
-            binding.itemDetail.text.toString()
+            binding.itemDetail.text.toString(),
+            binding.imageView.drawable.toString(),
+            this.date.toString()
+
         )
     }
 
@@ -93,20 +103,20 @@ class AddItemFragment : Fragment() {
             itemName.setText(item.itemName, TextView.BufferType.SPANNABLE)
             itemDetail.setText(item.itemDetail, TextView.BufferType.SPANNABLE)
             imageView.setImageURI(item.itemImage.toUri())
+            dir = item.itemImage
+            calendarView.isVisible = isCal
             gallery.setOnClickListener {
-                Log.d("hello", "button clicked")
-                val gallery =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-                val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                
-                startActivityForResult(gallery, 0)
+                ImagePicker.with(this@AddItemFragment).crop()
+                    .saveDir(context?.getExternalFilesDir(null)!!).start()
             }
-            camera.setOnClickListener {
-                Log.d("hello", "button clicked")
-                val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            viewCalender.setOnClickListener {
+                calendarView.isVisible = !isCal
+                isCal = !isCal
+            }
+            calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+                date = "$dayOfMonth/$month/$year"
+            }
 
-                startActivityForResult(camera, 1)
-            }
             saveAction.setOnClickListener {
                 updateItem()
             }
@@ -116,17 +126,16 @@ class AddItemFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0) {
+        if (resultCode == Activity.RESULT_OK) {
             imageUri = data?.data
-            Log.d("hello", imageUri.toString())
-            imageUri?.let { saveToInternalStorage(it) }
+            dir = imageUri!!.path!!
+            Log.d("yes", dir.toString())
+            // imageUri?.let { saveToInternalStorage(it) }
             binding.imageView.setImageURI(imageUri)
-        } else if (requestCode == 1) {
-            val image: Bitmap = data?.extras?.get("data") as Bitmap
         }
     }
 
-    private fun saveToInternalStorage(uri: Uri) {
+    /*private fun saveToInternalStorage(uri: Uri) {
         val ran = Random.nextInt()
         val inputStream = context?.contentResolver?.openInputStream(uri)
         val output = FileOutputStream(File("${context?.filesDir?.absoluteFile}/$ran.png"))
@@ -135,7 +144,7 @@ class AddItemFragment : Fragment() {
         dir = "${context?.filesDir?.absoluteFile}/$ran.png"
         Log.d("hello", uri.toString())
 
-    }
+    }*/
 
     /**
      * Inserts the new Item into database and navigates up to list fragment.
@@ -145,7 +154,8 @@ class AddItemFragment : Fragment() {
             viewModel.addNewItem(
                 binding.itemName.text.toString(),
                 binding.itemDetail.text.toString(),
-                dir.toString()
+                dir.toString(),
+                date
             )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
@@ -162,7 +172,8 @@ class AddItemFragment : Fragment() {
                 this.binding.itemName.text.toString(),
                 this.binding.itemDetail.text.toString(),
                 dir.toString(),
-                false
+                false,
+                this.date
             )
             val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
             findNavController().navigate(action)
@@ -189,17 +200,30 @@ class AddItemFragment : Fragment() {
                 addNewItem()
             }
             binding.gallery.setOnClickListener {
-                Log.d("hello", "button clicked")
-                val gallery =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-                val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(gallery, 0)
+
+                //val gallery =
+                //Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+                //val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                //startActivityForResult(gallery, 0)
+                ImagePicker.with(this).saveDir(context?.getExternalFilesDir(null)!!)
+                    .crop()                    //Crop image(Optional), Check Customization for more option
+                    //.compress(1024)			//Final image size will be less than 1 MB(Optional)
+                    .maxResultSize(
+                        1080,
+                        1080
+                    )    //Final image resolution will be less than 1080 x 1080(Optional)
+                    .start()
+
             }
-            binding.camera.setOnClickListener {
-                Log.d("hello", "button clicked")
-                val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(camera, 1)
+            binding.calendarView.isVisible = isCal
+            binding.viewCalender.setOnClickListener {
+                binding.calendarView.isVisible = !isCal
+                isCal = !isCal
             }
+            binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+                date = "$dayOfMonth/$month/$year"
+            }
+
 
         }
     }

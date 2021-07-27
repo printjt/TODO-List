@@ -24,10 +24,12 @@ import androidx.core.view.get
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inventory.data.Item
+import com.example.inventory.databinding.ItemListDoneItemBinding
 import com.example.inventory.databinding.ItemListItemBinding
 
 /**
@@ -42,7 +44,7 @@ class ItemListDoneAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
-            ItemListItemBinding.inflate(
+            ItemListDoneItemBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 )
@@ -57,23 +59,37 @@ class ItemListDoneAdapter(
 
 
 
-        holder.itemView.setOnClickListener { onButtonClicked(current) }
+        //holder.itemView.setOnClickListener { onButtonClicked(current) }
 
         holder.bind(current)
 
 
     }
 
-    class ItemViewHolder(private var binding: ItemListItemBinding) :
+    class ItemViewHolder(private var binding: ItemListDoneItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        private var isExpanded = false
 
 
         fun bind(item: Item) {
 
             binding.itemName.text = item.itemName
             binding.itemButton.isChecked = item.isDone
+            binding.detail.text = item.itemDetail
+            binding.date.text = item.date
             if (item.isDone){
                 binding.root.removeView(binding.root.rootView)
+            }
+
+            binding.linear.setOnClickListener {
+                binding.expand.isVisible = !isExpanded
+                isExpanded = !isExpanded
+            }
+
+            binding.but.setOnClickListener {
+                val action = ItemListDoneFragmentDirections.actionBlankFragmentToItemDetailFragment2(item.id)
+                binding.root.findNavController().navigate(action)
             }
 
 

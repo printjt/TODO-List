@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -59,7 +60,7 @@ class ItemListDoneFragment : Fragment() {
             this.findNavController().navigate(action)
         }
 
-        val swipe = object : SwipeDeleteDone(binding.recyclerView.context) {
+        val swipe = object : SwipeDeleteDone(binding.recyclerView1.context) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 when (direction) {
@@ -72,10 +73,10 @@ class ItemListDoneFragment : Fragment() {
         }
 
         val itemTouchHelper = ItemTouchHelper(swipe)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView1)
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView1.layoutManager = LinearLayoutManager(this.context)
+        binding.recyclerView1.adapter = adapter
 
 
         // Attach an observer on the allItems list to update the UI automatically when the data
@@ -83,7 +84,17 @@ class ItemListDoneFragment : Fragment() {
         viewModel.allItems.observe(this.viewLifecycleOwner) { items ->
 
             items.let {
+                binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
 
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        adapter.submitList(items.filter { it.itemName.startsWith(newText!!,true) && it.isDone })
+                        return true
+                    }
+
+                })
                 adapter.submitList(items.filter { it.isDone })
 
             }

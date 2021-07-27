@@ -34,5 +34,7 @@ data class Item(
     @ColumnInfo(name = "image")
     val itemImage: String,
     @ColumnInfo(name = "isDone")
-    val isDone: Boolean
+    val isDone: Boolean,
+    @ColumnInfo(name = "date")
+    val date: String
 )
