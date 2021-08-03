@@ -16,6 +16,8 @@
 package com.example.inventory
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ButtonBarLayout
 import androidx.navigation.NavController
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appBarConfiguration = AppBarConfiguration.Builder(R.id.blankFragment,R.id.itemListFragment).build()
+        val appBarConfiguration = AppBarConfiguration.Builder(R.id.itemListFragment).build()
 
         // Retrieve NavController from the NavHostFragment
         val navHostFragment = supportFragmentManager
@@ -47,7 +49,24 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
         val bottom_nav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottom_nav.setupWithNavController(navController)
+        bottom_nav.setOnNavigationItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.Todo -> {
+
+                    val action = ItemListFragmentDirections.actionItemListFragmentSelf("todo")
+                    navController.navigate(action)
+                    true
+                }
+                R.id.Done -> {
+
+                    val action = ItemListFragmentDirections.actionItemListFragmentSelf("done")
+                    navController.navigate(action)
+                    true
+                }
+                else -> false
+            }
+        }
+        //bottom_nav.setupWithNavController(navController)
 
 
 

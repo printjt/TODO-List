@@ -17,6 +17,7 @@
 package com.example.inventory
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +36,9 @@ import com.example.inventory.databinding.ItemListFragmentBinding
 /**
  * Main fragment displaying details for all items in the database.
  */
-class ItemListFragment : Fragment() {
+class ItemListFragment() : Fragment() {
+
+
     private val viewModel: InventoryViewModel by activityViewModels {
         InventoryViewModelFactory(
             (activity?.application as InventoryApplication).database.itemDao()
@@ -43,6 +47,7 @@ class ItemListFragment : Fragment() {
 
     private var _binding: ItemListFragmentBinding? = null
     private val binding get() = _binding!!
+    private val navigationArgs : ItemListFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,9 +107,15 @@ class ItemListFragment : Fragment() {
 
 
 
-       binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 
         binding.recyclerView.adapter = adapter
+
+
+        val temp = navigationArgs.data;
+        Log.d("yes",temp)
+        binding.screenName.text = temp
+
 
 
         // Attach an observer on the allItems list to update the UI automatically when the data
@@ -112,18 +123,42 @@ class ItemListFragment : Fragment() {
         viewModel.allItems.observe(this.viewLifecycleOwner) { items ->
 
             items.let {
+                adapter.submitList(items.filter { !it.isDone })
                 binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        adapter.submitList(items.filter { it.itemName.contains(newText!!,true) && !it.isDone })
+                        if(temp == "todo"){
+                            adapter.submitList(items.filter {
+                                it.itemName.contains(
+                                    newText!!,
+                                    true
+                                ) && !it.isDone
+                            })
+                        } else if (temp == "done"){
+                            adapter.submitList(items.filter {
+                                it.itemName.contains(
+                                    newText!!,
+                                    true
+                                ) && it.isDone
+                            })
+                        }
+
                         return true
                     }
 
                 })
-                adapter.submitList(items.filter { !it.isDone })
+
+                if(temp == "todo"){
+                    adapter.submitList(items.filter { !it.isDone })
+                } else if(temp == "done"){
+                    adapter.submitList(items.filter { it.isDone })
+                }
+
+
+
 
             }
 
@@ -137,6 +172,10 @@ class ItemListFragment : Fragment() {
             )
             this.findNavController().navigate(action)
         }
+
+
+
+
 
 
     }

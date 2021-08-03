@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/itemListFragment"
+        android:id="@+id/Todo"
         android:icon="@drawable/ic_edit"
         android:title="Todo" />
     <item
-        android:id="@+id/blankFragment"
+        android:id="@+id/Done"
         android:icon="@drawable/ic_baseline_check_circle_outline_24"
-        android:title="Done" />
+        android:title="Done"
+        tools:ignore="DuplicateIds" />
 </menu>

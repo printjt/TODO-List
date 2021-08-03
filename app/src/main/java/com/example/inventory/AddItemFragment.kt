@@ -157,7 +157,7 @@ class AddItemFragment : Fragment() {
                 dir.toString(),
                 date
             )
-            val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+            val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment("")
             findNavController().navigate(action)
         }
     }
@@ -175,7 +175,7 @@ class AddItemFragment : Fragment() {
                 false,
                 this.date
             )
-            val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+            val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment("")
             findNavController().navigate(action)
         }
     }
