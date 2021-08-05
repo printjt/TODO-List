@@ -15,11 +15,17 @@
  */
 package com.example.inventory
 
+import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.Paint
+import android.os.Build
 import android.text.style.StrikethroughSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
+import androidx.annotation.RequiresApi
 import androidx.core.view.get
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -30,6 +36,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inventory.data.Item
 import com.example.inventory.databinding.ItemListItemBinding
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * [ListAdapter] implementation for the recyclerview.
@@ -80,6 +89,7 @@ class ItemListAdapter(
         private var isExpanded = false
 
 
+        @RequiresApi(Build.VERSION_CODES.O)
         fun bind(item: Item) {
 
             binding.itemName.text = item.itemName
@@ -98,6 +108,28 @@ class ItemListAdapter(
                 val action = ItemListFragmentDirections.actionItemListFragmentToItemDetailFragment(item.id)
                 binding.root.findNavController().navigate(action)
             }
+            if(item.isDone){
+                binding.itemButton.isClickable = false
+            }
+            val currentDate = LocalDateTime.now()
+            val currentDateFormatted = currentDate.format(DateTimeFormatter.BASIC_ISO_DATE).subSequence(6,8).toString().toInt()
+            if(!item.isDone){
+                if(item.date.subSequence(0,2).toString().toInt() > currentDateFormatted + 10 ){
+                    Log.d("date","${item.date.subSequence(0,2).toString().toInt()}")
+                    binding.root.strokeColor = Color.parseColor("#30d50b")
+                }else if (item.date.subSequence(0,2).toString().toInt() in (currentDateFormatted + 5)..(currentDateFormatted + 10)){
+                    Log.d("date","${item.date.subSequence(0,2).toString().toInt()}")
+                    binding.root.strokeColor = Color.parseColor("#d5b40b")
+                }
+                else if (item.date.subSequence(0,2).toString().toInt() < currentDateFormatted + 5){
+                    Log.d("date","${item.date.subSequence(0,2).toString().toInt()}")
+                    binding.root.strokeColor = Color.parseColor("#d50b0b")
+                }
+            }
+
+
+
+
 
 
 

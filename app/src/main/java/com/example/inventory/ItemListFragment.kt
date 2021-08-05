@@ -113,8 +113,7 @@ class ItemListFragment() : Fragment() {
 
 
         val temp = navigationArgs.data;
-        Log.d("yes",temp)
-        binding.screenName.text = temp
+
 
 
 

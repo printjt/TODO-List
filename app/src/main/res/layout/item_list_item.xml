@@ -24,6 +24,7 @@
     app:cardMaxElevation="1dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"
+    app:strokeWidth="1dp"
 
 
     >

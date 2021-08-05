@@ -221,7 +221,12 @@ class AddItemFragment : Fragment() {
                 isCal = !isCal
             }
             binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-                date = "$dayOfMonth/$month/$year"
+                if(dayOfMonth.toString().length == 2){
+                    date = "$dayOfMonth/$month/$year"
+                }else if (dayOfMonth.toString().length == 1){
+                    date = "0$dayOfMonth/$month/$year"
+                }
+
             }
 
 
